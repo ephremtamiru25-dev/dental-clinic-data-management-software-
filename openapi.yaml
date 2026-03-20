@@ -1,0 +1,78 @@
+openapi: 3.0.0
+info:
+  title: DentalOS - Dental History Module API
+  description: API for managing longitudinal patient history including medical, dental, and clinical SOAP notes.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Development server
+paths:
+  /api/patients/{id}/history:
+    get:
+      summary: Get full patient history timeline
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: A list of history events
+  /api/patients/{id}/snapshot:
+    get:
+      summary: AI-generated clinical snapshot
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: AI summary of patient status
+  /api/patients/{id}/visit_notes:
+    post:
+      summary: Create a new SOAP note
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitNoteCreate'
+      responses:
+        '201':
+          description: Created
+components:
+  schemas:
+    VisitNoteCreate:
+      type: object
+      properties:
+        visit_date:
+          type: string
+          format: date
+        subjective:
+          type: string
+        objective:
+          type: string
+        assessment:
+          type: string
+        plan:
+          type: string
+        tooth_numbers:
+          type: array
+          items:
+            type: integer
+        procedure_codes:
+          type: array
+          items:
+            type: string
